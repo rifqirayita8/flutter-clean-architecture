@@ -3,9 +3,11 @@ import 'package:clean_architecture/features/profile/data/datasources/remote_data
 void main() async {
   final ProfileRemoteDataSourceImplementation profileRemoteDataSourceImplementation = ProfileRemoteDataSourceImplementation();
 
-  var response= await profileRemoteDataSourceImplementation.getAllUser(1);
+  try {
+    var response= await profileRemoteDataSourceImplementation.getUser(1);
 
-  for (var element in response) {
-    print(element.toJson());
+    print(response.toJson());
+  } catch(e) {
+    print(e);
   }
 }

@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'package:clean_architecture/core/error/exception.dart';
 
 import '../models/profile_model.dart';
 import 'package:dio/dio.dart';
@@ -14,9 +14,15 @@ class ProfileRemoteDataSourceImplementation extends ProfileRemoteDataSource {
     final dio = Dio();
     final response= await dio.get('https://reqres.in/api/users?page=$page');
 
-    Map<String, dynamic> dataBody= response.data as Map<String, dynamic>;
-    List<dynamic> data = dataBody['data'];
-    return ProfileModel.fromJsonList(data);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> dataBody= response.data as Map<String, dynamic>;
+      List<dynamic> data = dataBody['data'];
+      return ProfileModel.fromJsonList(data);
+    } else if (response.statusCode == 404) {
+      throw const EmptyException(message: '404 not found');
+    } else {
+      throw const GeneralException(message: 'Cannot get data');
+    }
   }
 
   @override
@@ -24,17 +30,15 @@ class ProfileRemoteDataSourceImplementation extends ProfileRemoteDataSource {
     final dio= Dio();
     final response = await dio.get('https://reqres.in/api/users/$id');
 
-    Map<String, dynamic> dataBody = jsonDecode(response.data);
-    Map<String, dynamic> data= dataBody['data'];
-    return ProfileModel.fromJson(data);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> dataBody = response.data as Map<String, dynamic>;
+      Map<String, dynamic> data= dataBody['data'];
+      return ProfileModel.fromJson(data);
+    } else if (response.statusCode == 404) {
+      throw const EmptyException(message: '404 not found');
+    } else {
+      throw const GeneralException(message: 'Cannot get data');
+    }
   }
   
 }
-
-//Uri url= Uri.parse('https://reqres.in/api/users?page=$page');
-//var response= await http.get(url);
-
-
-//Map<String, dynamic> dataBody= jsonDecode(response.body);
-//List<dynamic> data = dataBody['data'];
-//return ProfileModel.fromJsonList(data);

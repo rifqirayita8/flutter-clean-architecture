@@ -8,11 +8,15 @@ environment:
 
 dependencies:
   bloc: ^8.1.4
+  build_runner: ^2.4.11
+  connectivity_plus: ^6.0.5
   dartz: ^0.10.1
   dio: ^5.7.0
   equatable: ^2.0.5
   flutter:
     sdk: flutter
+  hive: ^2.2.3
+  mockito: ^5.4.4
 
 dev_dependencies:
   flutter_test:
